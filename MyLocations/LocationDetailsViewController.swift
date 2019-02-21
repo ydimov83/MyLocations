@@ -10,7 +10,7 @@ import UIKit
 import CoreLocation
 
 private let dateFormatter: DateFormatter = {
-   let formatter = DateFormatter()
+    let formatter = DateFormatter()
     formatter.dateStyle = .medium
     formatter.timeStyle = .short
     return formatter
@@ -30,14 +30,8 @@ class LocationDetailsViewController: UITableViewController {
     @IBOutlet weak var addressLabel: UILabel!
     @IBOutlet weak var dateLabel: UILabel!
     
-    @IBAction func done() {
-        navigationController?.popViewController(animated: true)
-    }
     
-    @IBAction func cancel() {
-        navigationController?.popViewController(animated: true)
-    }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -55,24 +49,56 @@ class LocationDetailsViewController: UITableViewController {
         
         dateLabel.text = format(date: Date())
         
-
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
+        //Hide keyboard
+        let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
+        gestureRecognizer.cancelsTouchesInView = false
+        tableView.addGestureRecognizer(gestureRecognizer)
+        
     }
-
+    
+    //MARK: - Actions
+    @IBAction func done() {
+        let hudView = HudView.hud(inView: navigationController!.view, animated: true)
+        afterDelay(0.6) {
+            hudView.hide()
+            self.navigationController?.popViewController(animated: true)
+        }
+    }
+    
+    @IBAction func cancel() {
+        navigationController?.popViewController(animated: true)
+    }
+    
+    @IBAction func categoryPickerDidSelectCategory(_ segue: UIStoryboardSegue) {
+        let controller = segue.source as! CategoryPickerViewController
+        categoryName = controller.selectedCategoryName
+        categoryLabel.text = categoryName
+    }
+    
     // MARK: - Table view data source
-
+    
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
         return 3
     }
-
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         return super.tableView(tableView, numberOfRowsInSection: section)
+    }
+    
+    override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+        if indexPath.section == 0 || indexPath.section == 1 {
+            return indexPath
+        } else {
+            return nil
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if indexPath.section == 0 && indexPath.row == 0 {
+            descriptionTextView.becomeFirstResponder()
+        }
     }
     
     //MARK: - Helper Methods
@@ -109,22 +135,24 @@ class LocationDetailsViewController: UITableViewController {
     func format(date: Date) -> String {
         return dateFormatter.string(from: date)
     }
-
-    // MARK: - Actions
     
-    @IBAction func categoryPickerDidSelectCategory(_ segue: UIStoryboardSegue) {
-        let controller = segue.source as! CategoryPickerViewController
-        categoryName = controller.selectedCategoryName
-        categoryLabel.text = categoryName
+    @objc func hideKeyboard(_ gestureRecognizer: UIGestureRecognizer) {
+        let point = gestureRecognizer.location(in: tableView)
+        let indexPath = tableView.indexPathForRow(at: point)
+        
+        if indexPath != nil && indexPath!.section == 0 && indexPath!.row == 0{
+            return //If user is tapping inside the descriptionTextView we don't want to hide the keyboard
+        }
+        descriptionTextView.resignFirstResponder() //hide keyboard when user taps anwywhere but the descriptionTextView
     }
     
     // MARK: - Navigation
-
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "PickCategory" {
             let controller = segue.destination as! CategoryPickerViewController
             controller.selectedCategoryName = categoryName
         }
     }
-
+    
 }
