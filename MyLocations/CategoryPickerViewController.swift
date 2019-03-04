@@ -72,10 +72,10 @@ class CategoryPickerViewController: UITableViewController {
         }
     }
     
-    // MARK - Navigation
+    // MARK: - Navigation
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        //Used as part of the unwing segue to send the picked cateogry back to LocationDetailsViewController
+        //Used as part of the unwind segue to send the picked cateogry back to LocationDetailsViewController
         
         if segue.identifier == "PickedCategory" {
             let cell = sender as! UITableViewCell
