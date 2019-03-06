@@ -43,6 +43,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             navController = tabViewControllers[1] as! UINavigationController
             let controller2 = navController.viewControllers.first as! LocationsViewController
             controller2.managedObjectContext = managedObjectContext
+            navController = tabViewControllers[2] as! UINavigationController
+            let controller3 = navController.viewControllers.first as! MapViewController
+            controller3.managedObjectContext = managedObjectContext
             let _ = controller2.view //Needed to avoid apple bug where tapping on Locations tab immediately after tagging a location fails to show new entry
             
         }
