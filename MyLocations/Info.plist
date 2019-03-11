@@ -52,5 +52,9 @@
 	</array>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>This app lets you keep track of interesting places. It needs access to GPS coordinates to determine your location.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Add photos to your locations</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Add photos to your locations</string>
 </dict>
 </plist>

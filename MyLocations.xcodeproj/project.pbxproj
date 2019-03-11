@@ -17,6 +17,7 @@
 		941ED5002219F0BC007142F0 /* MyLocationsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941ED4FF2219F0BC007142F0 /* MyLocationsUITests.swift */; };
 		94272DBB222F136700A24210 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94272DBA222F136700A24210 /* MapKit.framework */; };
 		94272DBD222F13C600A24210 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94272DBC222F13C600A24210 /* MapViewController.swift */; };
+		94309B4322371A2900B70232 /* UImage+Resize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94309B4222371A2900B70232 /* UImage+Resize.swift */; };
 		94419046221F1EE200416C9E /* CategoryPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94419045221F1EE200416C9E /* CategoryPickerViewController.swift */; };
 		946F31F5221EF3C8005030B4 /* LocationDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946F31F4221EF3C8005030B4 /* LocationDetailsViewController.swift */; };
 		94A1CAE0221F64E400B0724C /* HudView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A1CADF221F64E400B0724C /* HudView.swift */; };
@@ -61,6 +62,7 @@
 		941ED5012219F0BC007142F0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		94272DBA222F136700A24210 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		94272DBC222F13C600A24210 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
+		94309B4222371A2900B70232 /* UImage+Resize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UImage+Resize.swift"; sourceTree = "<group>"; };
 		94419045221F1EE200416C9E /* CategoryPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryPickerViewController.swift; sourceTree = "<group>"; };
 		946F31F4221EF3C8005030B4 /* LocationDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationDetailsViewController.swift; sourceTree = "<group>"; };
 		94A1CADF221F64E400B0724C /* HudView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HudView.swift; sourceTree = "<group>"; };
@@ -137,6 +139,7 @@
 				9413D3812225AD0D00040243 /* LocationsViewController.swift */,
 				941ED4E32219F0BB007142F0 /* Main.storyboard */,
 				94272DBC222F13C600A24210 /* MapViewController.swift */,
+				94309B4222371A2900B70232 /* UImage+Resize.swift */,
 			);
 			path = MyLocations;
 			sourceTree = "<group>";
@@ -303,6 +306,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				94309B4322371A2900B70232 /* UImage+Resize.swift in Sources */,
 				946F31F5221EF3C8005030B4 /* LocationDetailsViewController.swift in Sources */,
 				94AECF8A222062FA00730707 /* DataModel.xcdatamodeld in Sources */,
 				94A1CAE0221F64E400B0724C /* HudView.swift in Sources */,

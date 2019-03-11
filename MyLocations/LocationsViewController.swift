@@ -76,7 +76,10 @@ class LocationsViewController: UITableViewController {
         
         if editingStyle == .delete {
             let location = fetchedResultsController.object(at: indexPath)
+            
+            location.removePhotoFile()
             managedObjectContext.delete(location)
+            
             do {
                 try managedObjectContext.save()
             } catch {
@@ -174,4 +177,5 @@ extension LocationsViewController: NSFetchedResultsControllerDelegate {
     }
     
 }
+
 
