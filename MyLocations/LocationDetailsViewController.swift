@@ -19,6 +19,7 @@ private let dateFormatter: DateFormatter = {
 
 class LocationDetailsViewController: UITableViewController {
     
+    var observer: Any!
     var coordinate = CLLocationCoordinate2D(latitude: 0, longitude: 0)
     var placemark: CLPlacemark?
     var categoryName = "No Category"
@@ -30,7 +31,9 @@ class LocationDetailsViewController: UITableViewController {
             if let anImage = image {
                 imageView.image = anImage
                 imageView.isHidden = false
+                imageHeightConstraint.constant = 260 //Once we have an image resize the cell for better fit
                 photoLabel.text = "" //Removing label string here should allow the auto layout constrainst placed on the imageView to fill the whole cell up
+                tableView.reloadData() //Needed to resize the cell
             }
         }
     }
@@ -54,12 +57,19 @@ class LocationDetailsViewController: UITableViewController {
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var photoLabel: UILabel!
+    @IBOutlet weak var imageHeightConstraint: NSLayoutConstraint!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         if let location = locationToEdit {
             title = "Edit Location"
+            
+            if location.hasPhoto {
+                if let theImage = location.photoImage {
+                    show(image: theImage)
+                }
+            }
         }
         
         descriptionTextView.text = descriptionText
@@ -81,6 +91,8 @@ class LocationDetailsViewController: UITableViewController {
         gestureRecognizer.cancelsTouchesInView = false
         tableView.addGestureRecognizer(gestureRecognizer)
         
+        //Hide action sheet if present when app enters background
+        listenForBackgroundNotification()
     }
     
     //MARK: - Actions
@@ -94,14 +106,29 @@ class LocationDetailsViewController: UITableViewController {
         } else {
             hudView.text = "Tagged!"
             location = Location(context: managedObjectContext) //If we don't have an item to edit instantiate location
+            location.photoID = nil
         }
-        
+        //Set location object properties
         location.locationDescription = descriptionTextView.text
         location.category = categoryName
         location.latitude = coordinate.latitude
         location.longitude = coordinate.longitude
         location.date = date
         location.placemark = placemark
+        
+        //Save Image
+        if let image = image {
+            if !location.hasPhoto { //otherwise we'll just overwrite existing photo
+                location.photoID = Location.nextPhotoID() as NSNumber
+            }
+            if let data = image.jpegData(compressionQuality: 0.5){
+                do {
+                    try data.write(to: location.photoURL, options: .atomic)
+                } catch {
+                    print("Error writing to file: \(error)")
+                }
+            }
+        }
         
         do {
             try managedObjectContext.save()
@@ -198,7 +225,33 @@ class LocationDetailsViewController: UITableViewController {
         }
         descriptionTextView.resignFirstResponder() //hide keyboard when user taps anwywhere but the descriptionTextView
     }
-  
+    
+    func show(image: UIImage) {
+        imageView.image = image
+        imageView.isHidden = false
+        imageHeightConstraint.constant = 260
+        photoLabel.text = ""
+    }
+    
+    //Used to dismiss the action sheet if it's shown when app is sent to the background
+    func listenForBackgroundNotification() {
+        observer = NotificationCenter.default.addObserver(forName: UIApplication.didEnterBackgroundNotification, object: nil, queue: OperationQueue.main) {
+            [weak self] _ in //Must use weak self reference if we want the deinit method to succeed
+            if let weakSelf = self { //a weak self object can be nil, thus must be unwrapped
+                if weakSelf.presentedViewController != nil {
+                    weakSelf.dismiss(animated: false, completion: nil)
+                }
+                weakSelf.descriptionTextView.resignFirstResponder()
+            }
+        }
+    }
+    
+    deinit {
+        //As of iOS 9 the deinit here is taken care of by the system. It is used here as proof that LocationDetailsViewController object really is destroyed upon closing the screen, the use of the listenForBackgroundNotification() method without the use of "weak self" would have caused the object to be retained due to the strong reference to "self".
+        print("*** deinit \(self)")
+        NotificationCenter.default.removeObserver(observer)
+    }
+    
     // MARK: - Navigation
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -255,6 +308,10 @@ extension LocationDetailsViewController: UINavigationControllerDelegate, UIImage
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         
         image = info[UIImagePickerController.InfoKey.editedImage] as? UIImage
+        
+        if let theImage = image {
+            show(image: theImage)
+        }
         
         dismiss(animated: true, completion: nil)
     }
